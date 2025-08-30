@@ -162,11 +162,11 @@ class CombinationModel(BaseEvoModel):
 
 if __name__ == "__main__":
     """
-    Test the DoubleBindModel with example parameters and plot results.
+    Test the CombinationModel with example parameters and plot results.
     """
     init = [20, 0.01, 0.01]
 
-    model = DoubleBindModel(
+    model = CombinationModel(
         init=init,
         t_max=5000,
         cycle_duration = 500,
