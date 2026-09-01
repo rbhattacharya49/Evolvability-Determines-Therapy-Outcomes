@@ -17,7 +17,7 @@ class BaseEvoModel:
 
     def get_params(self):
         """
-        Retrieve the model parameters as a dictionary.
+        Retrieve the model parameters as a dictionary
         """
         return {
             'growth_rate': self.growth_rate,
@@ -53,6 +53,95 @@ class BaseEvoModel:
 
         self.y = y_cut
         
+    #This just has some additional functions to get eqb poimts 
+    def get_special_values(self):
+        """
+        Extracts equilibrium, minimum, and maximum values from model output `y`.
+        
+        """
+        
+        output = self.y.copy()
+
+        
+        result = {
+            'Equilibrium Population Size': output[0, -1],
+            'Equilibrium Strategy 1 Size': output[1, -1],
+            'Minimum Population Size': np.min(output[0]),
+            'Minimum Strategy 1 Size': np.min(output[1]),
+            'Maximum Population Size': np.max(output[0]),
+            'Maximum Strategy 1 Size': np.max(output[1])
+
+            
+            
+        }
+
+        if output.shape[0] == 3:
+            result.update({
+                'Equilibrium Strategy 2 Size': output[2, -1],
+                'Minimum Strategy 1 Size': np.min(output(y[2])),
+                'Maximum Strateg2 2 Size': np.max(output(y[2]))
+            })
+                
+                
+        if self.facultative_evolvability:
+            evolvability_1 = self.evo_1.copy()
+            evolvability_2 = self.evo_2.copy()
+            result.update({
+                'Evolvability 1 Equilibrium': evolvability_1[-1],
+                'Minimum Evolvability 1': np.min(evolvability_1),
+                'Minimum Evolvability 1': np.max(evolvability_1),
+                
+                
+                'Evolvability 2 Equilibrium': evolvability_2[-1],
+                'Minimum Evolvability 2': np.min(evolvability_2),
+                'Minimum Evolvability 2': np.max(evolvability_2)
+            })
+
+
+        return result
+    
+    
+    def get_specific_values(self, x, y=None):
+        """
+        Extracts specific values or range of values from model output `y`
+        
+        if x is an integer, and y is undefined then return population, strategy, and evolvability values at index n
+        
+        if x and y are defined then then arrays containing population, strategy, 
+        evolvability values from index x to index y will be returned. 
+        
+        if x is defined and y is 'end' then all values from x till the end will be returned.
+        
+        """
+        output = self.y.copy()
+        
+        if self.facultative:
+            evolvability_1 = self.evo_1.copy()
+            evolvability_2 = self.evo_2.copy()
+                
+        result = {}
+
+        # Determine y range
+        if y is None:
+            result['Population'] = output[0, x]
+            result['Strategy 1'] = output[1, x]
+            if output.shape[0] == 3:
+                result['Strategy 2'] = output[2, x]
+            if self.facultative_evolvability:
+                result['Evolvability 1'] = evolvability_1[x]
+                result['Evolvability 2'] = evolvability_2[x]
+        else:
+            if y == 'end':
+                y = output.shape[1]
+            result['Population'] = output[0, x:y]
+            result['Strategy 1'] = output[1, x:y]
+            if output.shape[0] == 3:
+                result['Strategy 2'] = output[2, x:y]
+            if self.facultative_evolvability:
+                result['Evolvability 1'] = evolvability_1[x:y]
+                result['Evolvability 2'] = evolvability_2[x:y]
+
+        return result
         
         
 if __name__ == "__main__":
