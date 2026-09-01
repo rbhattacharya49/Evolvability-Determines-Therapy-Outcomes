@@ -17,7 +17,7 @@ class BaseEvoModel:
 
     def get_params(self):
         """
-        Retrieve the model parameters as a dictionary.
+        Retrieve the model parameters as a dictionary
         """
         return {
             'growth_rate': self.growth_rate,

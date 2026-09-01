@@ -90,8 +90,11 @@ class SingleTherapyModel(BaseEvoModel):
             K_m = self.carrying_capacity
             r = self.growth_rate
             d = self.evolvability_cost
-
-            d_term1 = (2 * d * k_r * s * (v - mu) * np.exp(-((v - mu) ** 2) / sigma_t ** 2)) / sigma_t ** 2
+            
+            if self.facultative_evolvability:
+                d_term1 = (2 * d * k_r * s * (v - mu) * np.exp(-((v - mu) ** 2) / sigma_t ** 2)) / sigma_t ** 2
+            else:
+                d_term1 = 0
             d_term2 = (2 * s * (v - mu) * np.exp(-((v - mu) ** 2) / sigma_t ** 2)) / sigma_t ** 2
             d_term3 = (2 * r * v * x * np.exp(v ** 2 / sigma_k ** 2)) / (K_m * sigma_k ** 2)
             return d_term1 + d_term2 - d_term3
